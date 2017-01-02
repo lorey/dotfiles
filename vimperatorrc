@@ -1,5 +1,7 @@
 "3.15.0 (created: 2016/10/05 01:11:26)
 
+nnoremap j 5j
+nnoremap k 10k
 source! /home/karl/.vimperatorrc.local
 
 " vim: set ft=vimperator:
