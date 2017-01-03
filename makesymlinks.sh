@@ -8,7 +8,7 @@
 
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
-files="vimperatorrc"    # list of files/folders to symlink in homedir
+files="vimperatorrc zshrc"    # list of files/folders to symlink in homedir
 
 ##########
 
