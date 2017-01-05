@@ -2,6 +2,7 @@
 
 nnoremap j 5j
 nnoremap k 10k
+set hintchars=hjklasdf
 source! /home/karl/.vimperatorrc.local
 
 " vim: set ft=vimperator:
