@@ -83,3 +83,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# volume control
+alias lauter='amixer set Master 5%+'
+alias leiser='amixer set Master 5%-'
+alias ruhe='amixer set Master 0%'
