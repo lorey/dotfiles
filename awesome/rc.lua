@@ -54,7 +54,7 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts =
 {
-    awful.layout.suit.floating,
+    -- awful.layout.suit.floating,
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
@@ -376,5 +376,23 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+-- set wallpaper
+-- awful.util.spawn_with_shell("awsetbg -r ~/Pictures/wallpapers")
+
+-- startup applications
+-- using os.execute because of http://askubuntu.com/a/384903
+
+function run_once(cmd)
+  findme = cmd
+  firstspace = cmd:find(" ")
+  if firstspace then
+    findme = cmd:sub(0, firstspace-1)
+  end
+  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+end
+
+run_once("icedove")
+run_once("keepassx")
+
+-- enable two monitors (last to prevent duplicate startups)
 awful.util.spawn_with_shell("xrandr --auto --output HDMI1 --auto --right-of VGA1")
-awful.util.spawn_with_shell("awsetbg -r ~/Pictures/wallpapers")
