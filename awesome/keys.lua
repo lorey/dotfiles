@@ -1,5 +1,10 @@
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
+    -- volume keys
+    awful.key({                   }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 1%+") end),
+    awful.key({                   }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 1%-") end),
+    awful.key({                   }, "XF86AudioMute", function () awful.util.spawn("amixer -D pulse set Master 1+ toggle") end),
+
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
@@ -125,4 +130,4 @@ clientbuttons = awful.util.table.join(
 
 -- Set keys
 root.keys(globalkeys)
--- }}}
+--- }}}
