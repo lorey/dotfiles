@@ -11,6 +11,9 @@ set hintchars=hjklasdf
 noremap l gt
 noremap h gT
 
+" smaller highlight boxes
+highlight Hint font-family: monospace; font-size: 10px; font-weight: bold; color: white; background-color: red; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 1px; line-height: 100%
+
 " default content
 source! /home/karl/.vimperatorrc.local
 
