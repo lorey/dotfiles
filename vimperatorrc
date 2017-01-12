@@ -5,7 +5,7 @@ nnoremap j 5j
 nnoremap k 10k
 
 " use home row for hints
-set hintchars=hjklasdf
+set hintchars=abcdefghijklmnopqrstuvwxyz1234567890
 
 " switch tabs faster
 noremap l gt
