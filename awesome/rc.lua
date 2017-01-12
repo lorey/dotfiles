@@ -124,9 +124,6 @@ require("dotfiles/awesome/rules")
 -- signals
 require("dotfiles/awesome/signals")
 
--- set wallpaper
--- awful.util.spawn_with_shell("awsetbg -r ~/Pictures/wallpapers")
-
 -- startup applications
 
 function run_once(cmd)
@@ -140,6 +137,9 @@ end
 
 run_once("icedove")
 run_once("keepassx")
+run_once("owncloud")
 
 -- enable two monitors
 awful.util.spawn_with_shell("xrandr --auto --output HDMI1 --auto --right-of VGA1")
+
+awful.util.spawn_with_shell("feh --bg-scale ~/Pictures/wallpapers/rules.jpg")
