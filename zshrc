@@ -88,3 +88,4 @@ source $ZSH/oh-my-zsh.sh
 alias lauter='amixer set Master 5%+'
 alias leiser='amixer set Master 5%-'
 alias ruhe='amixer set Master 0%'
+alias screensaver='xset s off && echo "Screensaver is off"'
