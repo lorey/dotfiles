@@ -113,6 +113,18 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
+# start workspaces on specific screens only
+workspace 1 output VGA1
+workspace 2 output VGA1
+workspace 3 output VGA1
+workspace 4 output VGA1
+workspace 5 output VGA1
+workspace 6 output HDMI1
+workspace 7 output HDMI1
+workspace 8 output HDMI1
+workspace 9 output HDMI1
+workspace 10 output HDMI1
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -151,3 +163,9 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
 }
+
+# try to use two monitors
+exec "xrandr --auto --output HDMI1 --auto --right-of VGA1"
+
+# use wallpaper
+exec "feh --bg-scale ~/Pictures/wallpapers/inspiration-perspiration.jpg"
