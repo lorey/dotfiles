@@ -29,6 +29,9 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
+# start thunar
+bindsym $mod+Shift+Return exec xdg-open ~
+
 # kill focused window
 bindsym $mod+Shift+q kill
 
