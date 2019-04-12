@@ -1,0 +1,2 @@
+bind j scrollline +3
+bind k scrollline -3
