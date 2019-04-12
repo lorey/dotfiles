@@ -1,2 +1,5 @@
+# slow scrolling
 bind j scrollline +3
 bind k scrollline -3
+
+set searchurls.drive https://drive.google.com/drive/search?q=%s
