@@ -162,11 +162,12 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # create a launcher mode to quickly open apps
-set $mode_launcher Launch: [f]irefox [t]hunderbird
+set $mode_launcher Launch: [f]irefox [l]ock [t]hunderbird
 bindsym $mod+o mode "$mode_launcher"
 mode "$mode_launcher" {
         bindsym f exec firefox
         bindsym t exec thunderbird
+        bindsym l exec ~/dotfiles/bin/lock, mode "default"
 
         bindsym Escape mode "default"
         bindsym Return mode "default"

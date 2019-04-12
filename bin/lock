@@ -4,5 +4,8 @@ tmpbg='/tmp/screen.png'
 # make a screenshot
 scrot "$tmpbg"
 
+# blur it
+convert $tmpbg -blur 2x8 $tmpbg
+
 # display lockscreen with a working mouse and hide unlock indicator
 i3lock --image="$tmpbg" -p default --no-unlock-indicator
