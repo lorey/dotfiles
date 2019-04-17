@@ -1,9 +1,21 @@
+#
+# generic
+#
+
 # slow scrolling
 bind j scrollline +3
 bind k scrollline -3
 
+#
 # searches
-set searchurls.drive https://drive.google.com/drive/search?q=%s
+#
 
+# search in drive
+set searchurls.drive https://drive.google.com/drive/search?q=%s
+# search in google maps
+set searchurls.maps https://www.google.com/maps/search/%s/
+
+#
 # ignores
+#
 blacklistadd generals.io
