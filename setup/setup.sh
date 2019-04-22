@@ -12,3 +12,6 @@ sudo apt-get install vim
 # i3
 echo 'Installing i3'
 sudo apt-get install i3 i3status
+
+echo 'Installing i3 config-related tools'
+sudo apt-get install feh scrot
