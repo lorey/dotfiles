@@ -15,3 +15,6 @@ sudo apt-get install i3 i3status
 
 echo 'Installing i3 config-related tools'
 sudo apt-get install feh scrot
+
+echo 'Setup global gitignore'
+git config --global core.excludesfile '~/.gitignore'
