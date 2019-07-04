@@ -103,3 +103,9 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 
 # added by pipsi (https://github.com/mitsuhiko/pipsi)
 export PATH="/home/karl/.local/bin:$PATH"
+
+# add local bin
+export PATH="/home/karl/bin:$PATH"
+
+# black python formatter in docker
+black() { docker run -v $(pwd):/code jbbarth/black $*; }
