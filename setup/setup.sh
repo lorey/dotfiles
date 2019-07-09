@@ -18,3 +18,7 @@ sudo apt-get install feh scrot
 
 echo 'Setup global gitignore'
 git config --global core.excludesfile '~/.gitignore'
+
+# homebrew
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+brew install fzf

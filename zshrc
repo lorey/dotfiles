@@ -109,3 +109,6 @@ export PATH="/home/karl/bin:$PATH"
 
 # black python formatter in docker
 black() { docker run -v $(pwd):/code jbbarth/black $*; }
+
+# homebrew
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
