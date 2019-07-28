@@ -1,1 +1,3 @@
 source ~/.vimrc
+
+command Black action Tool_External Tools_Black
