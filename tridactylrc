@@ -13,6 +13,7 @@ bind k scrollline -3
 set searchurls.drive https://drive.google.com/drive/search?q=%s
 set searchurls.maps https://www.google.com/maps/search/%s/
 set searchurls.wetter https://www.wetter.com/suche/?q=%s
+set searchurls.youtube https://www.youtube.com/results?search_query=%s
 
 #
 # ignores
