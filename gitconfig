@@ -1,0 +1,5 @@
+[user]
+	email = git@karllorey.com
+	name = Karl Lorey
+[core]
+	excludesfile = ~/.gitignore
