@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-#
-# run pylint on changed files
-# source: https://github.com/wbyoung/dotfiles/blob/master/bin/pylint-diff
-pylint -rn `git diff --name-only "$@" | grep -E "\.py$"`
