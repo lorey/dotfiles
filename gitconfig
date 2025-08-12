@@ -3,3 +3,5 @@
 	name = Karl Lorey
 [core]
 	excludesfile = ~/.gitignore
+[push]
+	autoSetupRemote = true

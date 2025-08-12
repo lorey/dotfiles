@@ -10,6 +10,7 @@ antigen use oh-my-zsh
 antigen bundle git
 antigen bundle pip
 antigen bundle command-not-found
+antigen bundle macos
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -27,3 +28,8 @@ source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh
 # Tell Antigen that you're done.
 antigen apply
 
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+
+source /Users/karllorey/.docker/init-zsh.sh || true # Added by Docker Desktop
+export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
