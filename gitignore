@@ -1,3 +1,5 @@
 .idea
 __pycache__
+
+# mac-specific
 .DS_Store
