@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    cat <<EOF
+Usage: fake-duplex [OPTIONS] [OUTPUT]
+
+Scan double-sided documents with a single-sided ADF.
+Scans front pages, prompts you to flip the stack, scans back pages,
+then merges them into a single PDF in the correct page order.
+
+Arguments:
+  OUTPUT                Output PDF filename (default: ~/Documents/Scans/YYYYMMDD-HHMM.pdf)
+
+Options:
+  -d, --device DEVICE   Scanner device string (auto-detected if omitted)
+  -r, --resolution DPI  Scan resolution (default: 300)
+  -h, --help            Show this help
+EOF
+}
+
+RESOLUTION=300
+OUTPUT=""
+DEVICE=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -r|--resolution) RESOLUTION="$2"; shift 2 ;;
+        -d|--device) DEVICE="$2"; shift 2 ;;
+        -h|--help) usage; exit 0 ;;
+        -*) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
+        *) OUTPUT="$1"; shift ;;
+    esac
+done
+
+if [[ -z "$OUTPUT" ]]; then
+    OUTPUT_DIR=$(xdg-user-dir DOCUMENTS 2>/dev/null || echo "$HOME/Documents")/Scans
+    mkdir -p "$OUTPUT_DIR"
+    OUTPUT="$OUTPUT_DIR/$(date +%Y%m%d-%H%M).pdf"
+fi
+
+# Auto-detect scanner
+if [[ -z "$DEVICE" ]]; then
+    DEVICE=$(scanimage -L 2>/dev/null | head -1 | sed "s/device \`\(.*\)' is a.*/\1/")
+    if [[ -z "$DEVICE" ]]; then
+        echo "Error: No scanner found." >&2
+        exit 1
+    fi
+    echo "Using scanner: $DEVICE"
+fi
+
+# Create temp dir, clean up on exit
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+scan_adf() {
+    local prefix="$1"
+    local label="$2"
+    local cmd=(scanimage -d "$DEVICE" --source ADF --resolution "$RESOLUTION"
+               -x 210 -y 297
+               --format=pnm --batch="$TMPDIR/${prefix}-%04d.pnm")
+
+    echo "Scanning ${label}..."
+    echo "  Running: ${cmd[*]}"
+    if ! "${cmd[@]}" 2>&1; then
+        echo "Error: scanimage failed for ${label}." >&2
+        echo "  Temp dir contents:" >&2
+        ls -la "$TMPDIR"/ >&2
+        exit 1
+    fi
+
+    local count
+    count=$(find "$TMPDIR" -name "${prefix}-*.pnm" | wc -l)
+    if [[ "$count" -eq 0 ]]; then
+        echo "Error: No pages scanned for ${label}." >&2
+        echo "  Temp dir contents:" >&2
+        ls -la "$TMPDIR"/ >&2
+        exit 1
+    fi
+
+    echo "Scanned $count ${label}."
+}
+
+count_pages() {
+    find "$TMPDIR" -name "$1-*.pnm" | wc -l
+}
+
+pnm_to_pdf() {
+    local pnm="$1"
+    local pdf="$2"
+    local deskewed="${pnm%.pnm}-deskewed.pnm"
+
+    echo "  Deskewing $(basename "$pnm")..."
+    if ! unpaper --dpi "$RESOLUTION" "$pnm" "$deskewed" >/dev/null 2>&1; then
+        echo "  Error: unpaper failed on $pnm" >&2
+        return 1
+    fi
+    if [[ ! -f "$deskewed" ]]; then
+        echo "  Error: unpaper produced no output for $pnm" >&2
+        return 1
+    fi
+
+    echo "  Converting $(basename "$deskewed") -> $(basename "$pdf")"
+    if ! img2pdf --pagesize A4 --fit shrink -o "$pdf" "$deskewed" 2>&1; then
+        echo "  Error: img2pdf failed on $deskewed" >&2
+        return 1
+    fi
+}
+
+# --- Step 1: Scan front pages ---
+echo ""
+echo "=== Place your documents in the ADF, front side facing up ==="
+read -rp "Press Enter to start scanning front pages..."
+
+scan_adf "front" "front page(s)"
+FRONT_PAGES=$(count_pages "front")
+
+# --- Step 2: Prompt to flip ---
+echo ""
+echo "=== Flip the entire output stack over and put it back in the ADF ==="
+echo "    (do NOT re-order the sheets, just flip the whole stack)"
+read -rp "Press Enter to start scanning back pages..."
+
+# --- Step 3: Scan back pages ---
+scan_adf "back" "back page(s)"
+BACK_PAGES=$(count_pages "back")
+
+if [[ "$FRONT_PAGES" -ne "$BACK_PAGES" ]]; then
+    echo "Error: Front pages ($FRONT_PAGES) and back pages ($BACK_PAGES) don't match." >&2
+    exit 1
+fi
+
+# --- Step 4: Convert pages to PDF, interleave, merge ---
+echo "Merging..."
+
+PAGES=()
+for i in $(seq 1 "$FRONT_PAGES"); do
+    front_nr=$(printf '%04d' "$i")
+    back_nr=$(printf '%04d' $(( FRONT_PAGES - i + 1 )))
+    for pnm in "$TMPDIR/front-${front_nr}.pnm" "$TMPDIR/back-${back_nr}.pnm"; do
+        pdf="${pnm%.pnm}-out.pdf"
+        if ! pnm_to_pdf "$pnm" "$pdf"; then
+            echo "Error: Failed to convert $pnm to PDF." >&2
+            exit 1
+        fi
+        PAGES+=("$pdf")
+    done
+done
+
+pdfunite "${PAGES[@]}" "$OUTPUT"
+
+TOTAL=$((FRONT_PAGES * 2))
+echo "Saved $TOTAL pages to $OUTPUT"
+
+# --- Step 5: Create compressed email version ---
+EMAIL_OUTPUT="${OUTPUT%.pdf}-email.pdf"
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
+    -dNOPAUSE -dBATCH -dQUIET -sOutputFile="$EMAIL_OUTPUT" "$OUTPUT"
+
+echo "Done! Compressed version: $EMAIL_OUTPUT ($(du -h "$EMAIL_OUTPUT" | cut -f1))"
