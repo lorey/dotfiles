@@ -1,0 +1,2 @@
+# let others do security testing
+exclude-newer = "7 days"
